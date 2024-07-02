@@ -233,21 +233,22 @@ func printcmd(format string, args ...interface{}) {
 
 // "Build flags", used by multiple commands.
 var (
-	buildA          bool        // -a
-	buildI          bool        // -i
-	buildN          bool        // -n
-	buildV          bool        // -v
-	buildX          bool        // -x
-	buildO          string      // -o
-	buildGcflags    string      // -gcflags
-	buildLdflags    string      // -ldflags
-	buildTarget     string      // -target
-	buildTrimpath   bool        // -trimpath
-	buildWork       bool        // -work
-	buildBundleID   string      // -bundleid
-	buildIOSVersion string      // -iosversion
-	buildAndroidAPI int         // -androidapi
-	buildTags       stringsFlag // -tags
+	buildA           bool        // -a
+	buildI           bool        // -i
+	buildN           bool        // -n
+	buildV           bool        // -v
+	buildX           bool        // -x
+	buildO           string      // -o
+	buildGcflags     string      // -gcflags
+	buildLdflags     string      // -ldflags
+	buildTarget      string      // -target
+	buildTrimpath    bool        // -trimpath
+	buildWork        bool        // -work
+	buildBundleID    string      // -bundleid
+	buildIOSVersion  string      // -iosversion
+	buildTVOSVersion string		 // -tvosversion
+	buildAndroidAPI  int         // -androidapi
+	buildTags        stringsFlag // -tags
 )
 
 func addBuildFlags(cmd *command) {
@@ -256,6 +257,7 @@ func addBuildFlags(cmd *command) {
 	cmd.flag.StringVar(&buildLdflags, "ldflags", "", "")
 	cmd.flag.StringVar(&buildTarget, "target", "android", "")
 	cmd.flag.StringVar(&buildBundleID, "bundleid", "", "")
+	cmd.flag.StringVar(&buildTVOSVersion, "tvosversion", "15.0", "")
 	cmd.flag.StringVar(&buildIOSVersion, "iosversion", "13.0", "")
 	cmd.flag.IntVar(&buildAndroidAPI, "androidapi", minAndroidAPI, "")
 
@@ -425,6 +427,10 @@ func parseBuildTarget(buildTarget string) ([]targetInfo, error) {
 	// Special case to build iossimulator if -target=ios
 	if buildTarget == "ios" {
 		addPlatform("iossimulator")
+	}
+
+	if buildTarget == "tvos" {
+		addPlatform("tvossimulator")
 	}
 
 	return targets, nil
